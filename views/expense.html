@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Expense Tracker </title>
+    </head>
+
+    <body class="Body">
+        
+        <div class="Main-Div">
+
+            <h1 id="Main-Div-H1-Title"> Expense Tracker </h1>
+
+            <div class="Inner-Div">
+            <form action="" id="Main-Form">
+
+                <label for="Expense-Amount-Input" id="Expense-Amount-Label"> Choose Expense Amount </label>
+                <input type="number" name="Expense-Amount" id="Expense-Amount-Input" class="Form-Inputs">
+                 
+                <label for="Description-Input" id="Description-Label"> Choose Description </label>
+                <input type="text" name="Description" id="Description-Input" class="Form-Inputs">
+
+                <label for="Category-Input" id="Category-Label"> Choose Category </label>
+                <select id="Category-Input" class="Form-Inputs">
+
+                    <option value="Rent"> Rent </option>
+                    <option value="Movies"> Movies </option>
+                    <option value="Accesories"> Accesories </option>
+                    <option value="Clothes"> Clothes </option>
+
+                </select>
+            
+                <button type="submit" id="Submit-Button"> Submit </button>
+            </form>
+            </div>
+        </div>
+
+        <div class="List-Div">
+            <ul id="Main-List" class="Main-List"></ul>
+        </div>
+
+    </body>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="expense.js"></script>
+</html>

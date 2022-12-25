@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+</head>
+<body>
+<section>
+<form id = expForm>
+    <label>Expense Amount:</label> 
+    <input type="text" id="amount"> &ensp;
+    <label>Choose a category:</label>
+    <select id="category">
+        <option selected>Choose Here</option>
+        <option value="Grocery">Grocery</option>
+        <option value="Fuel">Fuel</option>
+        <option value="House Rent">House Rent</option>
+        <option value="Tourism">Tourism</option> &ensp;
+</select> &ensp;
+<label>Expense Description:</label>
+<input type="text" id = "desc"> &ensp;
+<input type ="submit" id="btn" value="Add Expense"></button>
+</form>
+<ul id ="listDetails"></ul>
+</section>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+  <script src ="main.js"></script>  
+</body>
+</html>
