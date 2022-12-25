@@ -128,7 +128,7 @@ async function retrieveFromDatabase() {
 }
 
 async function editToDatabase(url) {
-  // Making the new Object
+  // Making new Object
   let expenseDetails = {
     expenseAmount: expenseAmount.value,
     description: description.value,

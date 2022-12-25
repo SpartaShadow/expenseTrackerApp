@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../util/expenseTracker");
 
-// Creating Users Table
+// Creating User Table
 const Expenses = sequelize.define("expenses", {
   id: {
     type: Sequelize.INTEGER,

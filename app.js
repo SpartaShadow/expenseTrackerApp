@@ -19,7 +19,6 @@ app.use((req, res) => {
   res.status(404).send(`<h1> Page Not Found </h1>`);
 });
 
-// Initializing database and listening to port
 sequelize
   .sync()
   .then((result) => {

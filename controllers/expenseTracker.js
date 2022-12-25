@@ -56,11 +56,6 @@ exports.deleteExpense = (req, res) => {
 };
 
 exports.editExpense = (req, res) => {
-  // Project.update(
-  //     { title: 'a very different title now' },
-  //     { where: { _id: 1 } }
-  //   )
-
   const id = req.params.id;
 
   Expenses.update(req.body, { where: { id: id } })
