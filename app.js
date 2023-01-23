@@ -2,9 +2,11 @@ const express = require("express"); // Express Import
 const bodyParser = require("body-parser"); // Body-Parser Import
 const cors = require("cors"); // Cors Import
 
-const sequelize = require("./util/expenseTracker"); // MySQL Database import (Local Import)
+const sequelize = require("./util/database"); // MySQL Database import (Local Import)
 
 const expensesRoutes = require("./routes/expenseTracker.js"); // Expenses Routes Imports
+
+const userRoutes = require("./routes/users.js");
 
 const app = express(); // Initializing the backend
 
@@ -13,6 +15,7 @@ app.use(bodyParser.json({ extended: false })); // Initializing Body Parser
 
 // Expenses Routes
 app.use("/expenses", expensesRoutes);
+app.use("/user", userRoutes);
 
 // Error Routes
 app.use((req, res) => {

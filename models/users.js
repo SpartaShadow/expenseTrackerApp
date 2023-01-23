@@ -2,8 +2,8 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../util/database");
 
-// Creating User Table
-const Expenses = sequelize.define("expenses", {
+// Creating Users Table
+const Users = sequelize.define("users", {
   id: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -11,20 +11,20 @@ const Expenses = sequelize.define("expenses", {
     primaryKey: true,
   },
 
-  expenseAmount: {
-    type: Sequelize.INTEGER,
+  username: {
+    type: Sequelize.STRING,
     allowNull: false,
   },
 
-  description: {
-    type: Sequelize.TEXT,
+  email: {
+    type: Sequelize.STRING,
     allowNull: false,
   },
 
-  category: {
+  password: {
     type: Sequelize.STRING,
     allowNull: false,
   },
 });
 
-module.exports = Expenses;
+module.exports = Users;
