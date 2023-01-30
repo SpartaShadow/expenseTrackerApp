@@ -32,7 +32,7 @@ async function storeUserToDatabase() {
     if (response.data.alreadyExisting) {
       popupNotification("Error", "Email Already Exists");
     } else {
-      popupNotification("Success", "Successfully signed up");
+      location.href = "../views/login.html";
     }
   } catch (err) {
     console.log(err);

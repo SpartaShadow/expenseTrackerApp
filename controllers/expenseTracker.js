@@ -1,10 +1,9 @@
 const Expenses = require("../models/expenseTracker");
 
-exports.postAddExpense = (req, res) => {
-  const expenseAmount = req.body.expenseAmount;
-  const description = req.body.description;
-  const category = req.body.category;
+exports.postAddExpense = async (req, res, next) => {
+  const { expenseAmount, description, category } = req.body;
 
+  console.log(req.user);
   Expenses.create({
     expenseAmount: expenseAmount,
     description: description,

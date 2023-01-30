@@ -28,7 +28,7 @@ async function loginUser() {
       userDetails
     );
 
-    popupNotification("Success", "Logged In Succesfully");
+    location.href = "../views/expense.html";
   } catch (err) {
     {
       if (err.response.status === 401) {

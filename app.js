@@ -8,6 +8,9 @@ const expensesRoutes = require("./routes/expenseTracker.js"); // Expenses Routes
 
 const userRoutes = require("./routes/users.js");
 
+const Users = require("./models/users");
+const Expenses = require("./models/expenseTracker");
+
 const app = express(); // Initializing the backend
 
 app.use(cors()); // Initializing Cors
@@ -21,6 +24,9 @@ app.use("/user", userRoutes);
 app.use((req, res) => {
   res.status(404).send(`<h1> Page Not Found </h1>`);
 });
+
+Expenses.belongsTo(Users, { constraints: true, onDelete: "CASCADE" });
+Users.hasMany(Expenses);
 
 sequelize
   .sync()
