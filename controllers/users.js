@@ -1,19 +1,22 @@
 const Users = require("../models/users.js");
+
+const bcrypt = require("bcrypt");
+
 exports.postAddUser = async (req, res, next) => {
-  const username = req.body.username;
-  const email = req.body.email;
-  const password = req.body.password;
+  const { username, email, password } = req.body;
 
   try {
     const user = await Users.findAll({ where: { email: email } });
 
-    console.log(user);
-
     if (user.length === 0) {
-      const response = await Users.create({
+      const saltRounds = 10;
+
+      const hash = await bcrypt.hash(password, saltRounds);
+
+      await Users.create({
         username: username,
         email: email,
-        password: password,
+        password: hash,
       });
 
       res.json({ alreadyExisting: false });
@@ -33,8 +36,12 @@ exports.loginUser = async (req, res, next) => {
     // But due to nature of email being a unique value the array will contain either no users or only one user
     const user = await Users.findAll({ where: { email: email } });
 
-    if (user.length !== 0) {
-      if (user[0].dataValues.password === password) {
+    if (user.length > 0) {
+      const correctPassword = await bcrypt.compare(
+        password,
+        user[0].dataValues.password
+      );
+      if (correctPassword) {
         res.json({
           userExists: true,
           correctPassword: true,

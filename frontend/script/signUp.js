@@ -6,7 +6,11 @@ const password = document.getElementById("Password-Input");
 mainForm.addEventListener("submit", onSubmit);
 function onSubmit(e) {
   e.preventDefault();
-  if (username.value === "" || email.value === "" || password.value === "") {
+  if (
+    username.value.trim() === "" ||
+    email.value.trim() === "" ||
+    password.value.trim() === ""
+  ) {
     popupNotification("Caution", "Please Enter all the fields");
   } else {
     storeUserToDatabase();
@@ -28,6 +32,7 @@ async function storeUserToDatabase() {
     if (response.data.alreadyExisting) {
       popupNotification("Error", "Email Already Exists");
     } else {
+      popupNotification("Success", "Successfully signed up");
     }
   } catch (err) {
     console.log(err);

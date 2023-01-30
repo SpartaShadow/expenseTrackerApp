@@ -28,9 +28,9 @@ function onSubmit(e) {
   e.preventDefault();
 
   if (
-    expenseAmount.value === "" ||
-    description.value === "" ||
-    category.value === ""
+    expenseAmount.value.trim() === "" ||
+    description.value.trim() === "" ||
+    category.value.trim() === ""
   ) {
     popupNotification("Error", "Please Enter All The Fields");
   } else if (edit[0]) {
