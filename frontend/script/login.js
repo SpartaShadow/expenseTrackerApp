@@ -10,7 +10,7 @@ function onSubmit(e) {
   e.preventDefault();
 
   if (email.value === "" || password.value === "") {
-    window.alert("Please Enter all the fields");
+    popupNotification("Caution", "Please Enter all the fields");
   } else {
     loginUser();
   }
@@ -28,19 +28,17 @@ async function loginUser() {
       userDetails
     );
 
-    if (response.data.userExists) {
-      if (response.data.correctPassword) {
-        window.alert("Logged In Successfully");
-
-        popupNotification("Success", "Logged In Succesfully");
-      } else {
-        window.alert("Wrong Password");
-      }
-    } else {
-      window.alert("User Not Found");
-    }
+    popupNotification("Success", "Logged In Succesfully");
   } catch (err) {
-    console.log(err);
+    {
+      if (err.response.status === 401) {
+        popupNotification("Failed", "Wrong Password");
+      }
+
+      if (err.response.status === 404) {
+        popupNotification("Failed", "User Not Found");
+      }
+    }
   }
 }
 

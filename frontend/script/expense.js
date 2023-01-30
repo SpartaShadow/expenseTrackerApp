@@ -32,7 +32,7 @@ function onSubmit(e) {
     description.value === "" ||
     category.value === ""
   ) {
-    window.alert("Please Enter all the fields");
+    popupNotification("Error", "Please Enter All The Fields");
   } else if (edit[0]) {
     // Editing the existing details
     editToDatabase(edit[1]);
@@ -215,4 +215,35 @@ function createDeleteButton() {
 function clearFields() {
   expenseAmount.value = "";
   description.value = "";
+}
+
+const close = document.getElementById("close");
+const popupContainer = document.getElementById("popup-container");
+const popupInnerDiv = document.getElementById("popup-inner-div");
+
+close.addEventListener("click", closePopup);
+
+function closePopup() {
+  popupContainer.classList.remove("active");
+
+  const childNodes = popupInnerDiv.children;
+
+  popupInnerDiv.removeChild(childNodes[1]);
+  popupInnerDiv.removeChild(childNodes[1]);
+}
+
+function popupNotification(title, message) {
+  popupContainer.classList.add("active");
+
+  const headingH1 = document.createElement("h1");
+  headingH1.append(document.createTextNode(title));
+
+  const innerMessage = document.createElement("p");
+  innerMessage.append(document.createTextNode(message));
+
+  // <h1>Success</h1>
+  // <p>${message}</p>
+
+  popupInnerDiv.appendChild(headingH1);
+  popupInnerDiv.appendChild(innerMessage);
 }
