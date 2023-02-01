@@ -27,7 +27,7 @@ async function loginUser() {
       "http://localhost:4000/user/login",
       userDetails
     );
-
+    localStorage.setItem("token", response.data.token);
     location.href = "../views/expense.html";
   } catch (err) {
     {

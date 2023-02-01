@@ -1,6 +1,8 @@
 const express = require("express"); // Express Import
 const bodyParser = require("body-parser"); // Body-Parser Import
 const cors = require("cors"); // Cors Import
+const dotenv = require("dotenv");
+dotenv.config();
 
 const sequelize = require("./util/database"); // MySQL Database import (Local Import)
 
@@ -29,7 +31,7 @@ Expenses.belongsTo(Users, { constraints: true, onDelete: "CASCADE" });
 Users.hasMany(Expenses);
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then((result) => {
     app.listen(4000);
   })

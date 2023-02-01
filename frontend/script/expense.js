@@ -12,6 +12,12 @@ const mainList = document.getElementById("Main-List");
 // Edit true or false var
 let edit = [false, ""];
 
+const token = localStorage.getItem("token");
+
+if (!token) {
+  window.location.href = "../views/login.html";
+}
+
 /*
  * ------ Event Listeners ------
  */
@@ -81,11 +87,17 @@ async function deleteItem(e) {
   let url = "http://localhost:4000/expenses/delete-expense/" + li.id;
 
   try {
-    await axios.post(url);
+    await axios.post(url, "", { headers: { Authorization: token } });
 
     // Removing From screen
     mainList.removeChild(li);
-  } catch (err) {}
+  } catch (err) {
+    if (err.response.status === 401) {
+      popupNotification("Error", "You are not authorized");
+    }
+
+    console.log(err);
+  }
 }
 
 /*
@@ -102,27 +114,37 @@ async function storeToDatabase() {
 
   // Storing to crud crud
   try {
-    let response = await axios.post(
+    const response = await axios.post(
       "http://localhost:4000/expenses/add-expense",
-      expenseDetails
+      expenseDetails,
+      { headers: { Authorization: token } }
     );
 
     createList(response.data);
   } catch (err) {
+    if (err.response.status === 401) {
+      localStorage.removeItem("token");
+      location.href = "../views/login.html";
+    }
     console.log(err);
   }
 }
 
 async function retrieveFromDatabase() {
   try {
-    let response = await axios.get(
-      "http://localhost:4000/expenses/get-expenses"
+    const response = await axios.get(
+      "http://localhost:4000/expenses/get-expenses",
+      { headers: { Authorization: token } }
     );
 
     response.data.forEach((data) => {
       createList(data);
     });
   } catch (err) {
+    if (err.response.status === 401) {
+      localStorage.removeItem("token");
+      location.href = "../views/login.html";
+    }
     console.log(err);
   }
 }
