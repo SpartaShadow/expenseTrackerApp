@@ -10,6 +10,19 @@
     </head>
 
     <body class="Body">
+
+        <header class="main-header">
+
+            <div class="toggle-container" id="toggle-dark-mode-div">
+                <label for="toggle" class="dark-mode-label">Dark Theme
+
+                </label>
+                <input type="checkbox" name="toggle" id="toggle" class="toggle-dark-mode">
+            </div>
+
+            <button class="buy-premium-button" id="buy-premium-button"> Buy Premium </button>
+            <button class="logout-button" id="logout-button"> Logout </button>
+        </header>
         
         <div class="Main-Div">
 
@@ -52,5 +65,6 @@
 
     </body>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="../script/expense.js"></script>
 </html>

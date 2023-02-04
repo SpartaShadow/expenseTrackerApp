@@ -19,6 +19,7 @@ exports.postAddUser = async (req, res, next) => {
         username: username,
         email: email,
         password: hash,
+        isPremium: false,
       });
 
       res.json({ alreadyExisting: false });

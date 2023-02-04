@@ -131,13 +131,20 @@ async function storeToDatabase() {
 }
 
 async function retrieveFromDatabase() {
+  // Disabling Dark Mode
+  toggleDarkModeDiv.style.display = "none";
+
   try {
     const response = await axios.get(
       "http://localhost:4000/expenses/get-expenses",
       { headers: { Authorization: token } }
     );
 
-    response.data.forEach((data) => {
+    if (response.data.isPremium === true) {
+      enableDarkMode();
+    }
+
+    response.data.expenses.forEach((data) => {
       createList(data);
     });
   } catch (err) {
@@ -269,3 +276,94 @@ function popupNotification(title, message) {
   popupInnerDiv.appendChild(headingH1);
   popupInnerDiv.appendChild(innerMessage);
 }
+
+/*
+ * Logout Button and Features
+ */
+const logoutButton = document.getElementById("logout-button");
+
+logoutButton.onclick = (e) => {
+  localStorage.removeItem("token");
+  location.href = "../views/login.html";
+};
+
+/*
+ * Dark Mode
+ */
+
+const toggle = document.getElementById("toggle");
+const toggleDarkModeDiv = document.getElementById("toggle-dark-mode-div");
+
+toggle.addEventListener("change", (e) => {
+  document.body.classList.toggle("dark", e.target.checked);
+});
+
+function enableDarkMode() {
+  toggleDarkModeDiv.style.display = "";
+}
+
+/*
+ * Razor Pay Functions
+ */
+
+const buyPremium = document.getElementById("buy-premium-button");
+
+buyPremium.onclick = async function (e) {
+  const response = await axios.post(
+    "http://localhost:4000/premium/get-premium",
+    "",
+    { headers: { Authorization: token } }
+  );
+
+  const options = {
+    key: response.data.key_id, // Enter the Key ID generated from the Dashboard
+    amount: "10000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    currency: "INR",
+
+    name: "Expense Tracker Corporation",
+    description: "Test Transaction",
+
+    order_id: response.data.orderId,
+
+    // Callback function on successful payment
+    handler: async function (response) {
+      try {
+        const transactionStatus = await axios.post(
+          "http://localhost:4000/premium/transaction-status",
+          {
+            orderId: response.razorpay_order_id,
+            paymentId: response.razorpay_payment_id,
+          },
+          { headers: { Authorization: token } }
+        );
+
+        enableDarkMode();
+        popupNotification("Success", transactionStatus.data.message);
+      } catch (err) {
+        window.alert("Error: Payment Failed");
+      }
+    },
+
+    prefill: {
+      name: "Test User",
+      email: "asdf@gmail.com",
+      contact: "9876543210",
+    },
+
+    theme: {
+      color: "#3399cc",
+    },
+  };
+
+  // Configuring rzp API
+  const rzp = new Razorpay(options);
+
+  // To open razorPay window
+  rzp.open();
+  e.preventDefault();
+
+  // On payment Failed
+  rzp.on("payment.failed", function (response) {
+    window.alert("Error: Payment Failed");
+  });
+};
