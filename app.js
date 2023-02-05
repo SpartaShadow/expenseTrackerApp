@@ -12,6 +12,8 @@ const userRoutes = require("./routes/users");
 
 const premiumRoutes = require("./routes/premium");
 
+const leaderboardRoutes = require("./routes/leaderboard");
+
 const Users = require("./models/users");
 const Expenses = require("./models/expenseTracker");
 const Orders = require("./models/orders");
@@ -25,6 +27,7 @@ app.use(bodyParser.json({ extended: false })); // Initializing Body Parser
 app.use("/expenses", expensesRoutes);
 app.use("/user", userRoutes);
 app.use("/premium", premiumRoutes);
+app.use("/leaderboard", leaderboardRoutes);
 
 // Error Routes
 app.use((req, res) => {

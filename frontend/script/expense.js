@@ -131,9 +131,6 @@ async function storeToDatabase() {
 }
 
 async function retrieveFromDatabase() {
-  // Disabling Dark Mode
-  toggleDarkModeDiv.style.display = "none";
-
   try {
     const response = await axios.get(
       "http://localhost:4000/expenses/get-expenses",
@@ -141,7 +138,7 @@ async function retrieveFromDatabase() {
     );
 
     if (response.data.isPremium === true) {
-      enableDarkMode();
+      activatePremiumFeatures();
     }
 
     response.data.expenses.forEach((data) => {
@@ -278,7 +275,7 @@ function popupNotification(title, message) {
 }
 
 /*
- * Logout Button and Features
+ * header Button and Features
  */
 const logoutButton = document.getElementById("logout-button");
 
@@ -286,6 +283,25 @@ logoutButton.onclick = (e) => {
   localStorage.removeItem("token");
   location.href = "../views/login.html";
 };
+
+function showLeaderBoard() {
+  const showleaderboardButton = document.getElementById("leaderboard-button");
+  showleaderboardButton.style.display = "";
+  showleaderboardButton.onclick = async () => {
+    const token = localStorage.getItem("token");
+    const userLeaderBoardArray = await axios.get(
+      "http://localhost:4000/leaderboard/get-users-leaderboard",
+      "",
+      { headers: { Authorization: token } }
+    );
+
+    var leaderboardElem = document.getElementById("leaderboard-button");
+    // leaderboardElem.innerHTML += `<h1> Leader Board </h1>`;
+    userLeaderBoardArray.data.forEach((userDetails) => {
+      showleaderboardButton.innerHTML += `<li>Name = ${userDetails.name} , Total expense = ${userDetails.total_cost}`;
+    });
+  };
+}
 
 /*
  * Dark Mode
@@ -298,8 +314,13 @@ toggle.addEventListener("change", (e) => {
   document.body.classList.toggle("dark", e.target.checked);
 });
 
-function enableDarkMode() {
+function activatePremiumFeatures() {
+  buyPremium.style.display = "none";
   toggleDarkModeDiv.style.display = "";
+  toggleDarkModeDiv.onclick = function () {
+    document.body.style.backgroundColor = "pink";
+  };
+  showLeaderBoard();
 }
 
 /*
@@ -337,7 +358,7 @@ buyPremium.onclick = async function (e) {
           { headers: { Authorization: token } }
         );
 
-        enableDarkMode();
+        activatePremiumFeatures();
         popupNotification("Success", transactionStatus.data.message);
       } catch (err) {
         window.alert("Error: Payment Failed");
