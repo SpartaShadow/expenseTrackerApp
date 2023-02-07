@@ -295,10 +295,9 @@ function showLeaderBoard() {
       { headers: { Authorization: token } }
     );
 
-    var leaderboardElem = document.getElementById("leaderboard-button");
-    // leaderboardElem.innerHTML += `<h1> Leader Board </h1>`;
+    showleaderboardButton.innerHTML = `<h1> Leader Board </h1>`;
     userLeaderBoardArray.data.forEach((userDetails) => {
-      showleaderboardButton.innerHTML += `<li>Name = ${userDetails.name} , Total expense = ${userDetails.total_cost}`;
+      showleaderboardButton.innerHTML += `<li>Name = ${userDetails.username} , Total expense = ${userDetails.total_cost}`;
     });
   };
 }
