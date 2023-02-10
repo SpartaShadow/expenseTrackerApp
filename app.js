@@ -14,6 +14,8 @@ const premiumRoutes = require("./routes/premium");
 
 const leaderboardRoutes = require("./routes/leaderboard");
 
+const passwordRoutes = require("./routes/password");
+
 const Users = require("./models/users");
 const Expenses = require("./models/expenseTracker");
 const Orders = require("./models/orders");
@@ -28,6 +30,7 @@ app.use("/expenses", expensesRoutes);
 app.use("/user", userRoutes);
 app.use("/premium", premiumRoutes);
 app.use("/leaderboard", leaderboardRoutes);
+app.use("/password", passwordRoutes);
 
 // Error Routes
 app.use((req, res) => {

@@ -38,7 +38,7 @@ function onSubmit(e) {
     description.value.trim() === "" ||
     category.value.trim() === ""
   ) {
-    popupNotification("Error", "Please Enter All The Fields");
+    alert("Please Enter All The Fields");
   } else if (edit[0]) {
     // Editing the existing details
     editToDatabase(edit[1]);
@@ -93,7 +93,7 @@ async function deleteItem(e) {
     mainList.removeChild(li);
   } catch (err) {
     if (err.response.status === 401) {
-      popupNotification("Error", "You are not authorized");
+      alert("You are not authorized");
     }
 
     console.log(err);
@@ -243,37 +243,6 @@ function clearFields() {
   description.value = "";
 }
 
-const close = document.getElementById("close");
-const popupContainer = document.getElementById("popup-container");
-const popupInnerDiv = document.getElementById("popup-inner-div");
-
-close.addEventListener("click", closePopup);
-
-function closePopup() {
-  popupContainer.classList.remove("active");
-
-  const childNodes = popupInnerDiv.children;
-
-  popupInnerDiv.removeChild(childNodes[1]);
-  popupInnerDiv.removeChild(childNodes[1]);
-}
-
-function popupNotification(title, message) {
-  popupContainer.classList.add("active");
-
-  const headingH1 = document.createElement("h1");
-  headingH1.append(document.createTextNode(title));
-
-  const innerMessage = document.createElement("p");
-  innerMessage.append(document.createTextNode(message));
-
-  // <h1>Success</h1>
-  // <p>${message}</p>
-
-  popupInnerDiv.appendChild(headingH1);
-  popupInnerDiv.appendChild(innerMessage);
-}
-
 /*
  * header Button and Features
  */
@@ -358,7 +327,7 @@ buyPremium.onclick = async function (e) {
         );
 
         activatePremiumFeatures();
-        popupNotification("Success", transactionStatus.data.message);
+        alert("Success", transactionStatus.data.message);
       } catch (err) {
         window.alert("Error: Payment Failed");
       }
