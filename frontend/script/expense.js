@@ -119,7 +119,6 @@ async function storeToDatabase() {
       expenseDetails,
       { headers: { Authorization: token } }
     );
-
     createList(response.data);
   } catch (err) {
     if (err.response.status === 401) {
@@ -178,7 +177,7 @@ async function editToDatabase(url) {
  * ------ Create Functions ------
  */
 
-function createList(data) {
+async function createList(data) {
   // Creating an empty li
   let li = document.createElement("li");
 

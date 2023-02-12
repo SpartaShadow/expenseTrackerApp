@@ -1,30 +1,8 @@
-// Model Imports
-const Users = require("../models/users");
-const Expenses = require("../models/expenseTracker");
-const sequelize = require("../util/database");
+// const Expense = require("../models/expenseTracker");
+const Leaderboard = require("../models/leaderboard");
 
-exports.getUserLeaderboard = async (req, res, next) => {
-  try {
-    const usersLeaderboard = await Users.findAll({
-      attributes: [
-        "id",
-        "username",
-        [
-          sequelize.fn("sum", sequelize.col("expenses.expenseAmount")),
-          "total_cost",
-        ],
-      ],
-      include: [
-        {
-          model: Expenses,
-          attributes: [],
-        },
-      ],
-      group: ["users.id"],
-      order: [[sequelize.col("total_cost"), "DESC"]],
-    });
-    res.json(usersLeaderboard);
-  } catch (err) {
-    console.log(err);
-  }
+exports.getUserLeaderboard = async (req, res) => {
+  let a = await Leaderboard.findAll({ order: [["totalExpense", "DESC"]] });
+  console.log(a);
+  res.json(a);
 };
