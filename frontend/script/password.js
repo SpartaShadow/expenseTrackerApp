@@ -18,6 +18,10 @@ function onSubmit(e) {
 
 async function submitForgotPassword() {
   const response = await axios.post(
-    "http://localhost:4000/password/forgot-password"
+    "http://localhost:4000/password/forgot-password",
+    { email: email.value }
   );
+
+  const a = `<a href="${response.data.link}" target="_blank"> Click Here to Reset Password </a>`;
+  console.log(a);
 }

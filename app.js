@@ -19,6 +19,7 @@ const passwordRoutes = require("./routes/password");
 const Users = require("./models/users");
 const Expenses = require("./models/expenseTracker");
 const Orders = require("./models/orders");
+const ForgotPasswordRequests = require("./models/passwordResetReq");
 
 const app = express(); // Initializing the backend
 
@@ -40,6 +41,13 @@ Orders.belongsTo(Users, { constraints: true, onDelete: "CASCADE" });
 Users.hasMany(Orders);
 Expenses.belongsTo(Users, { constraints: true, onDelete: "CASCADE" });
 Users.hasMany(Expenses);
+
+// One to Many User 1<--->M ForgotPasswordRequests
+ForgotPasswordRequests.belongsTo(Users, {
+  constraints: true,
+  onDelete: "CASCADE",
+});
+Users.hasMany(ForgotPasswordRequests);
 
 sequelize
   .sync()
