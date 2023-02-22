@@ -270,6 +270,12 @@ function showLeaderBoard() {
   };
 }
 
+const reportButton = document.getElementById("generate-report-button");
+
+reportButton.onclick = (e) => {
+  location.href = "../views/report.html";
+};
+
 /*
  * Dark Mode
  */
