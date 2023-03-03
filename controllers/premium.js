@@ -6,6 +6,8 @@ const RazorPayServices = require("../services/razorpayServices.js");
 const AWSServices = require("../services/awsServices.js");
 const DownloadLinksServices = require("../services/downloadLinksServices.js");
 
+const ITEMS_PER_PAGE = 2;
+
 exports.buyPremium = async (req, res, next) => {
   const userId = req.user.id;
 
@@ -62,9 +64,37 @@ exports.getReportExpenses = async (req, res, next) => {
 
     const userId = req.user.id;
 
-    const expenses = await ExpenseServices.getUserExpenses({ userId: userId });
+    const pageNumber = req.query.page;
 
-    res.json({ expenses: expenses, isPremium: req.user.isPremium });
+    const totalExpenses = await ExpenseServices.countExpense({
+      userId: userId,
+    });
+
+    const expenses = await ExpenseServices.getUserExpenses({
+      offset: (pageNumber - 1) * ITEMS_PER_PAGE,
+      limit: ITEMS_PER_PAGE,
+      where: {
+        userId: userId,
+      },
+    });
+
+    const data = {
+      expenses: expenses,
+      isPremium: req.user.isPremium,
+
+      totalExpenses: totalExpenses,
+
+      hasNextPage: ITEMS_PER_PAGE * pageNumber < totalExpenses,
+      hasPreviousPage: pageNumber > 1,
+
+      nextPage: parseInt(pageNumber) + 1,
+      currentPage: parseInt(pageNumber),
+      previousPage: parseInt(pageNumber) - 1,
+
+      lastPage: Math.ceil(totalExpenses / ITEMS_PER_PAGE),
+    };
+
+    res.json(data);
   } catch (err) {
     res.status(401).json({ message: "Unauthorized" });
   }

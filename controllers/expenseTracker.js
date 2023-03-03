@@ -2,6 +2,8 @@ const { where } = require("sequelize");
 const ExpenseServices = require("../services/expenseServices.js");
 const User = require("../models/users");
 
+const ITEMS_PER_PAGE = 3;
+
 exports.postAddExpense = async (req, res, next) => {
   const { expenseAmount, description, category } = req.body;
   const userId = req.user.id;
@@ -27,10 +29,39 @@ exports.postAddExpense = async (req, res, next) => {
 
 exports.getAllExpenses = async (req, res, next) => {
   try {
+    const pageNumber = req.query.page;
+
     const userId = req.user.id;
 
-    const expenses = await ExpenseServices.getUserExpenses({ userId: userId });
-    res.json({ expenses: expenses, isPremium: req.user.isPremium });
+    const totalExpenses = await ExpenseServices.countExpense({
+      userId: userId,
+    });
+
+    const expenses = await ExpenseServices.getUserExpenses({
+      offset: (pageNumber - 1) * ITEMS_PER_PAGE,
+      limit: ITEMS_PER_PAGE,
+      where: {
+        userId: userId,
+      },
+    });
+
+    const data = {
+      expenses: expenses,
+      isPremium: req.user.isPremium,
+
+      totalExpenses: totalExpenses,
+
+      hasNextPage: ITEMS_PER_PAGE * pageNumber < totalExpenses,
+      hasPreviousPage: pageNumber > 1,
+
+      nextPage: parseInt(pageNumber) + 1,
+      currentPage: parseInt(pageNumber),
+      previousPage: parseInt(pageNumber) - 1,
+
+      lastPage: Math.ceil(totalExpenses / ITEMS_PER_PAGE),
+    };
+
+    res.json(data);
   } catch (err) {
     console.log(err);
   }

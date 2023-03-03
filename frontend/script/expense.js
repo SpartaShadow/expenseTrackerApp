@@ -22,7 +22,9 @@ if (!token) {
  * ------ Event Listeners ------
  */
 
-window.addEventListener("DOMContentLoaded", retrieveFromDatabase);
+window.addEventListener("DOMContentLoaded", () => {
+  retrieveFromDatabase(1);
+});
 
 mainForm.addEventListener("submit", onSubmit);
 
@@ -119,7 +121,7 @@ async function storeToDatabase() {
       expenseDetails,
       { headers: { Authorization: token } }
     );
-    createList(response.data);
+    retrieveFromDatabase(1);
   } catch (err) {
     if (err.response.status === 401) {
       localStorage.removeItem("token");
@@ -129,10 +131,11 @@ async function storeToDatabase() {
   }
 }
 
-async function retrieveFromDatabase() {
+async function retrieveFromDatabase(pageNumber) {
   try {
+    mainList.innerHTML = "";
     const response = await axios.get(
-      "http://localhost:4000/expenses/get-expenses",
+      "http://localhost:4000/expenses/get-expenses/?page=" + pageNumber,
       { headers: { Authorization: token } }
     );
 
@@ -143,6 +146,7 @@ async function retrieveFromDatabase() {
     response.data.expenses.forEach((data) => {
       createList(data);
     });
+    pagination(response.data);
   } catch (err) {
     if (err.response.status === 401) {
       localStorage.removeItem("token");
@@ -240,6 +244,56 @@ function createDeleteButton() {
 function clearFields() {
   expenseAmount.value = "";
   description.value = "";
+}
+
+function pagination(data) {
+  const pageButtonsDiv = document.getElementById("page-buttons-div");
+
+  // Clearing existing buttons
+  pageButtonsDiv.innerHTML = "";
+
+  // Creating the previous Button if it exists
+  if (data.hasPreviousPage) {
+    const prevButton = document.createElement("button");
+
+    prevButton.innerHTML = data.previousPage;
+
+    prevButton.classList.add("page-buttons");
+
+    prevButton.addEventListener("click", () => {
+      retrieveFromDatabase(data.previousPage);
+    });
+
+    pageButtonsDiv.appendChild(prevButton);
+  }
+
+  const currentButton = document.createElement("button");
+
+  currentButton.innerHTML = data.currentPage;
+
+  currentButton.classList.add("page-buttons");
+  currentButton.classList.toggle("active");
+
+  currentButton.addEventListener("click", () => {
+    retrieveFromDatabase(data.currentPage);
+  });
+
+  pageButtonsDiv.appendChild(currentButton);
+
+  // Creating the next button if it exists
+  if (data.hasNextPage) {
+    const nextButton = document.createElement("button");
+
+    nextButton.innerHTML = data.nextPage;
+
+    nextButton.classList.add("page-buttons");
+
+    nextButton.addEventListener("click", () => {
+      retrieveFromDatabase(data.nextPage);
+    });
+
+    pageButtonsDiv.appendChild(nextButton);
+  }
 }
 
 /*
