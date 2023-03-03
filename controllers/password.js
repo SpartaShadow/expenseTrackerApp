@@ -1,22 +1,24 @@
+const url = "http://localhost:4000/";
+
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 
-// Model Imports
-const ForgotPasswordRequests = require("../models/passwordResetReq");
-const Users = require("../models/users");
+// Services Imports
+
+const UserServices = require("../services/userServices.js");
+const ForgotPasswordServices = require("../services/forgetPasswordServices.js");
 
 exports.forgotPassword = async (req, res, next) => {
   const uuid = uuidv4();
 
-  const user = await Users.findOne({ where: { email: req.body.email } });
-
-  const response = await ForgotPasswordRequests.create({
+  const user = await UserServices.getOneUser({ email: req.body.email });
+  const response = await ForgotPasswordServices.createForgotPasswordRequest({
     id: uuid,
     isActive: true,
     userId: user.id,
   });
 
-  const resetLink = "http://localhost:4000/password/reset-password/" + uuid;
+  const resetLink = url + "password/reset-password/" + uuid;
 
   res.json({ link: resetLink });
 };
@@ -25,14 +27,14 @@ exports.resetPassword = async (req, res, next) => {
   try {
     const uuid = req.params.uuid;
 
-    const request = await ForgotPasswordRequests.findOne({
-      where: { id: uuid },
+    const request = await ForgotPasswordServices.getOneForgotPasswordRequest({
+      id: uuid,
     });
 
     if (request.isActive === true) {
-      await ForgotPasswordRequests.update(
+      await ForgotPasswordServices.updateForgetPasswordRequest(
         { isActive: false },
-        { where: { id: uuid } }
+        { id: uuid }
       );
 
       res.send(
@@ -58,14 +60,15 @@ exports.updatePassword = async (req, res, next) => {
   const uuid = req.params.uuid;
   const password = req.query.password;
 
-  const request = await ForgotPasswordRequests.findOne({ where: { id: uuid } });
+  const request = await ForgotPasswordServices.getOneForgotPasswordRequest({
+    id: uuid,
+  });
 
   const saltRounds = 10;
 
   const hash = await bcrypt.hash(password, saltRounds);
 
-  await Users.update({ password: hash }, { where: { id: request.userId } });
-
+  await UserServices.updateUser({ password: hash }, { id: request.userId });
   res.send(
     `<html>
             <h1> Success </h1> 

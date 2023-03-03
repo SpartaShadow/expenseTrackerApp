@@ -1,26 +1,26 @@
-const Users = require("../models/users.js");
-
 const bcrypt = require("bcrypt");
-
-const jwt = require("jsonwebtoken");
+const UserServices = require("../services/userServices.js");
+const jwtServices = require("../services/jwtServices.js");
 
 exports.postAddUser = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   try {
-    const user = await Users.findAll({ where: { email: email } });
+    const user = await UserServices.getOneUser({ email: email });
 
-    if (user.length === 0) {
+    if (!user) {
       const saltRounds = 10;
 
       const hash = await bcrypt.hash(password, saltRounds);
 
-      await Users.create({
+      const userData = {
         username: username,
         email: email,
         password: hash,
         isPremium: false,
-      });
+      };
+
+      await UserServices.createUser(userData);
 
       res.json({ alreadyExisting: false });
     } else {
@@ -37,18 +37,15 @@ exports.loginUser = async (req, res, next) => {
   try {
     // This returns an array
     // But due to nature of email being a unique value the array will contain either no users or only one user
-    const user = await Users.findAll({ where: { email: email } });
+    const user = await UserServices.getOneUser({ email: email });
 
-    if (user.length > 0) {
-      const correctPassword = await bcrypt.compare(
-        password,
-        user[0].dataValues.password
-      );
+    if (user) {
+      const correctPassword = await bcrypt.compare(password, user.password);
       if (correctPassword) {
         res.json({
           userExists: true,
           correctPassword: true,
-          token: generateToken(user[0].id, user[0].username),
+          token: jwtServices.generateToken(user.id, user.username),
         });
       } else {
         res.status(401).json({
@@ -63,12 +60,3 @@ exports.loginUser = async (req, res, next) => {
     console.log(err);
   }
 };
-function generateToken(id, username) {
-  return jwt.sign(
-    {
-      userId: id,
-      username: username,
-    },
-    process.env.SECRET_KEY
-  );
-}
