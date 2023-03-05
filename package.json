@@ -4,7 +4,7 @@
   "description": "��#\u0000 \u0000e\u0000x\u0000p\u0000e\u0000n\u0000s\u0000e\u0000T\u0000r\u0000a\u0000c\u0000k\u0000e\u0000r\u0000A\u0000p\u0000p\u0000\r\u0000 \u0000",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "nodemon": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,8 @@
     "sib-api-v3-sdk": "^8.5.0",
     "sql": "^0.78.0",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
   }
 }

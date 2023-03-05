@@ -15,7 +15,7 @@ reportDownloadButton.addEventListener("click", downloadReport);
 const pastLinksButton = document.getElementById("past-links-button");
 pastLinksButton.addEventListener("click", getPastLinks);
 
-async function getExpenses(pageNumber) {
+async function getExpenses(pageNumber, ITEMS_PER_PAGE) {
   try {
     reportTable.innerHTML = `<tr>
                 <th>Date</th>
@@ -23,8 +23,16 @@ async function getExpenses(pageNumber) {
                 <th>Description</th>
                 <th>Category</th>
              </tr>`;
+
+    if (ITEMS_PER_PAGE == null) {
+      ITEMS_PER_PAGE = 5;
+    }
+
     const response = await axios.get(
-      "http://localhost:4000/expenses/get-expenses?page=" + pageNumber,
+      "http://localhost:4000/premium/get-report?page=" +
+        pageNumber +
+        "&rows=" +
+        ITEMS_PER_PAGE,
       { headers: { Authorization: token } }
     );
 
@@ -85,6 +93,12 @@ function createTable(expense) {
 
   reportTable.innerHTML += tr;
 }
+
+const rowsSelect = document.getElementById("rows-select");
+rowsSelect.addEventListener("change", () => {
+  const ITEMS_PER_PAGE = rowsSelect.value;
+  getExpenses(1, ITEMS_PER_PAGE);
+});
 
 function pagination(data) {
   const pageButtonsDiv = document.getElementById("page-buttons-div");

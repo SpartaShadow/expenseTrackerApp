@@ -6,7 +6,7 @@ const RazorPayServices = require("../services/razorpayServices.js");
 const AWSServices = require("../services/awsServices.js");
 const DownloadLinksServices = require("../services/downloadLinksServices.js");
 
-const ITEMS_PER_PAGE = 2;
+// const ITEMS_PER_PAGE = 2;
 
 exports.buyPremium = async (req, res, next) => {
   const userId = req.user.id;
@@ -62,9 +62,14 @@ exports.getReportExpenses = async (req, res, next) => {
       throw new Error();
     }
 
+    const ITEMS_PER_PAGE = parseInt(req.query.rows);
+    console.log(ITEMS_PER_PAGE);
+
     const userId = req.user.id;
 
     const pageNumber = req.query.page;
+
+    console.log(ITEMS_PER_PAGE);
 
     const totalExpenses = await ExpenseServices.countExpense({
       userId: userId,
