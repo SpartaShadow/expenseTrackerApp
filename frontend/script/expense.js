@@ -344,8 +344,15 @@ toggle.addEventListener("change", (e) => {
 function activatePremiumFeatures() {
   buyPremium.style.display = "none";
   toggleDarkModeDiv.style.display = "";
-  toggleDarkModeDiv.onclick = function () {
-    document.body.style.backgroundColor = "pink";
+  toggleDarkModeDiv.onclick = function toggleTheme() {
+    const body = document.querySelector("body");
+    if (body.style.backgroundColor === "black") {
+      body.style.backgroundColor = "white";
+      body.style.color = "black";
+    } else {
+      body.style.backgroundColor = "black";
+      body.style.color = "white";
+    }
   };
   showLeaderBoard();
 }

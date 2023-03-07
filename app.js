@@ -2,18 +2,21 @@ const express = require("express"); // Express Import
 const bodyParser = require("body-parser"); // Body-Parser Import
 const cors = require("cors"); // Cors Import
 const dotenv = require("dotenv");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 dotenv.config();
 
 const sequelize = require("./util/database"); // MySQL Database import (Local Import)
 
+// Node Modules Imports
+const fs = require("fs");
+const path = require("path");
+
 const expensesRoutes = require("./routes/expenseTracker"); // Expenses Routes Imports
-
 const userRoutes = require("./routes/users");
-
 const premiumRoutes = require("./routes/premium");
-
 const leaderboardRoutes = require("./routes/leaderboard");
-
 const passwordRoutes = require("./routes/password");
 
 const Users = require("./models/users");
@@ -23,8 +26,18 @@ const ForgotPasswordRequests = require("./models/passwordResetReq");
 
 const app = express(); // Initializing the backend
 
-app.use(cors()); // Initializing Cors
-app.use(bodyParser.json({ extended: false })); // Initializing Body Parser
+// Initialzing logging Files
+const accessLogFiles = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
+// Initializing middlewares
+app.use(cors());
+app.use(bodyParser.json({ extended: false }));
+app.use(helmet());
+app.use(compression());
+app.use(morgan("combined", { stream: accessLogFiles }));
 
 // Expenses Routes
 app.use("/expenses", expensesRoutes);
