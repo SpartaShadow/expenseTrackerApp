@@ -316,10 +316,12 @@ function showLeaderBoard() {
       "",
       { headers: { Authorization: token } }
     );
-
-    showleaderboardButton.innerHTML = `<h1> Leader Board </h1>`;
+    const leaderboard = document.getElementById("leaderboard");
+    leaderboard.innerHTML = " ";
     userLeaderBoardArray.data.forEach((userDetails) => {
-      showleaderboardButton.innerHTML += `<li>Name = ${userDetails.username} , Total expense = ${userDetails.total_cost}`;
+      const li = document.createElement("li");
+      li.innerText = `Name = ${userDetails.username} , Total expense = ${userDetails.totalExpense}`;
+      leaderboard.appendChild(li);
     });
   };
 }

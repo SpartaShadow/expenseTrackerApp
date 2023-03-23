@@ -1,14 +1,16 @@
-const { where } = require("sequelize");
+const { where, Transaction } = require("sequelize");
 const ExpenseServices = require("../services/expenseServices.js");
 const User = require("../models/users");
+const sequelize = require("../util/database.js");
 
 const ITEMS_PER_PAGE = 3;
 
 exports.postAddExpense = async (req, res, next) => {
+  const t = await sequelize.transaction();
   const { expenseAmount, description, category } = req.body;
   const userId = req.user.id;
 
-  const totalexpense = req.user.totalExpense + expenseAmount;
+  const totalexpense = req.user.totalExpense + parseInt(expenseAmount);
   User.update({ totalExpense: totalexpense }, { where: { id: userId } });
 
   try {
@@ -19,11 +21,14 @@ exports.postAddExpense = async (req, res, next) => {
       userId: userId,
     };
 
-    const result = await ExpenseServices.createExpense(expense);
-
+    const result = await ExpenseServices.createExpense(expense, {
+      transaction: t,
+    });
+    await t.commit();
     res.json(result.dataValues);
   } catch (err) {
     console.log(err);
+    await t.rollback();
   }
 };
 
@@ -89,6 +94,9 @@ exports.deleteExpense = async (req, res, next) => {
       id: id,
       userId: userId,
     });
+
+    const totalexpense = req.user.totalExpense - expense.expenseAmount;
+    User.update({ totalExpense: totalexpense }, { where: { id: userId } });
 
     await ExpenseServices.destroyExpense(expense);
 

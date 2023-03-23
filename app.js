@@ -1,6 +1,7 @@
 const express = require("express"); // Express Import
 const bodyParser = require("body-parser"); // Body-Parser Import
 const cors = require("cors"); // Cors Import
+const https = require("https");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const compression = require("compression");
@@ -23,6 +24,9 @@ const Users = require("./models/users");
 const Expenses = require("./models/expenseTracker");
 const Orders = require("./models/orders");
 const ForgotPasswordRequests = require("./models/passwordResetReq");
+
+// const privateKey = fs.readFileSync("server.key");
+// const certificate = fs.readFileSync("server.cert");
 
 const app = express(); // Initializing the backend
 
@@ -65,7 +69,8 @@ Users.hasMany(ForgotPasswordRequests);
 sequelize
   .sync()
   .then((result) => {
-    app.listen(4000);
+    // https.createServer({key:privateKey,cert:certificate},app).listen(3000);
+    app.listen(process.env.PORT || 4000);
   })
   .catch((err) => {
     console.log(err);

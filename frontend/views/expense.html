@@ -16,6 +16,7 @@
             <div class="toggle-container" id="toggle-dark-mode-div" style="display: none;">
                 <label for="toggle" class="dark-mode-label">Dark Theme</label>
                 <input type="checkbox" name="toggle" id="toggle" class="toggle-dark-mode">
+                <button class="generate-report-button" id="generate-report-button" > Generate Report </button>
             </div>
 
             <button class="buy-premium-button" id="buy-premium-button"> Buy Premium </button>
@@ -54,9 +55,13 @@
         <div class="List-Div">
             <ul id="Main-List" class="Main-List"></ul>
         </div>
-        <button class="leaderboard-button" id="leaderboard-button" > Leaderboard </button>
-        <button class="generate-report-button" id="generate-report-button" > Generate Report </button>
-        <div id="page-buttons-div">
+        <div id="page-buttons-div"></div>
+        <div>
+            <button class="leaderboard-button" id="leaderboard-button" > Leaderboard </button>
+            <ul id="leaderboard"></ul>
+        </div>
+        
+        
         </div>
     </body>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>

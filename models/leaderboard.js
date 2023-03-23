@@ -9,7 +9,8 @@ const leaderboard = sequelize.define("leaderbord", {
     primaryKey: true,
   },
   totalExpense: {
-    type: Sequelize.STRING,
+    type: Sequelize.INTEGER,
+    defaultValue: 0,
   },
   userName: Sequelize.STRING,
 });
